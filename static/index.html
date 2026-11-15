@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="/static/images/icon.png">
+<title>Paradise Island Launcher</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.4 12 4l9 7.4"/><path d="M5.5 10v9.2a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V10"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-3.6 3.7-6 7.5-6s6.9 2.4 7.5 6"/></symbol>
+  <symbol id="i-java" viewBox="0 0 24 24"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2.2a2.8 2.8 0 0 1 0 5.6H16"/><path d="M7 21h9"/><path d="M8 5c0-1 1-1.3 1-2.2"/><path d="M11 4.6c0-1 1-1.3 1-2.2"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1A2 2 0 1 1 4 16.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.9L4.3 6.8A2 2 0 1 1 7.1 4l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.2h7a2 2 0 0 1 2 2v8.3a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V7.5Z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10"/><path d="m8 10 4 4 4-4"/><path d="M5 19h14"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.4 2.3 3.6 5.2 3.6 8.5S14.4 18.2 12 20.5c-2.4-2.3-3.6-5.2-3.6-8.5S9.6 5.8 12 3.5Z"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15"/><path d="M9.5 7V4.8h5V7"/><path d="M6.5 7l.8 12.2a1.6 1.6 0 0 0 1.6 1.5h6.2a1.6 1.6 0 0 0 1.6-1.5L17.5 7"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4.2L19 9.2a2.1 2.1 0 0 0-3-3L5.2 17 4 20Z"/><path d="m14.5 6.5 3 3"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 5-5 4.5 4.5 2.5-2.5 3 3"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="m12 3 8 4.2v9.6L12 21l-8-4.2V7.2L12 3Z"/><path d="m4 7.2 8 4.2 8-4.2"/><path d="M12 11.4V21"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M19 14v5a1.8 1.8 0 0 1-1.8 1.8H5.8A1.8 1.8 0 0 1 4 19V7.8A1.8 1.8 0 0 1 5.8 6H11"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M6.5 6.5a8 8 0 1 0 11 0"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 10.8V17"/><path d="M12 7.4h.01"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="m8 9 4-4 4 4"/><path d="M4.5 19h15"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="/static/images/icon.png" alt="">
+      <div class="brand-text">
+        <span class="brand-title">Paradise Island</span>
+        <span class="brand-sub" data-i18n="app.tagline">Launcher</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-action="nav" data-page="home"><svg><use href="#i-home"/></svg><span data-i18n="nav.home">Play</span></button>
+      <button class="nav-item" data-action="nav" data-page="instances"><svg><use href="#i-grid"/></svg><span data-i18n="nav.instances">Instances</span></button>
+      <button class="nav-item" data-action="nav" data-page="accounts"><svg><use href="#i-user"/></svg><span data-i18n="nav.accounts">Accounts</span></button>
+      <button class="nav-item" data-action="nav" data-page="java"><svg><use href="#i-java"/></svg><span data-i18n="nav.java">Java</span></button>
+      <button class="nav-item" data-action="nav" data-page="settings"><svg><use href="#i-settings"/></svg><span data-i18n="nav.settings">Settings</span></button>
+    </nav>
+    <div class="sidebar-foot">
+      <button class="icon-btn" data-action="toggle-theme" id="themeBtn" title="Theme"><svg><use href="#i-moon"/></svg></button>
+      <button class="icon-btn" data-action="nav" data-page="settings" title="Language"><svg><use href="#i-globe"/></svg></button>
+      <span class="build" id="buildTag">v2.3</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="home-bg" id="homeBg"></div>
+      <div class="home-shade"></div>
+      <div class="home-content">
+        <div class="home-top">
+          <button class="user-chip" data-action="nav" data-page="accounts">
+            <img id="homeAvatar" src="/static/images/avatar.png" alt="">
+            <span>
+              <span class="uname" id="homeUserName">Steve</span>
+              <span class="utype" id="homeUserType" data-i18n="accounts.offline">Offline</span>
+            </span>
+          </button>
+          <div class="home-top-right">
+            <button class="btn ghost sm" data-action="open-log"><svg><use href="#i-list"/></svg><span data-i18n="home.log">Log</span></button>
+            <button class="btn ghost sm" data-action="open-instance-folder"><svg><use href="#i-folder"/></svg><span data-i18n="home.folder">Folder</span></button>
+          </div>
+        </div>
+        <div class="hero">
+          <div class="hero-eyebrow" data-i18n="home.welcome">Welcome back</div>
+          <h1 class="hero-title" id="homeTitle">Paradise Island</h1>
+          <div class="hero-sub" data-i18n="home.subtitle">Ready for a new adventure?</div>
+          <div class="hero-meta" id="homeMeta"></div>
+          <button class="launch-btn" id="launchBtn" data-action="launch"><svg><use href="#i-play"/></svg><span data-i18n="home.launch">Launch game</span></button>
+          <button class="switch-version" data-action="pick-version"><svg><use href="#i-chevron"/></svg><span data-i18n="home.switchVersion">Switch version</span></button>
+        </div>
+        <div class="home-foot">
+          <span id="homeFoot">Paradise Island Launcher</span>
+          <span id="homeBuild">v2.3</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSTANCES -->
+    <section class="page" id="page-instances">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="instances.title">Instances</h1>
+          <p data-i18n="instances.subtitle">Manage your installed versions</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn primary" data-action="toggle-install"><svg><use href="#i-plus"/></svg><span data-i18n="instances.install">Install version</span></button>
+          <button class="btn" data-action="refresh-instances"><svg><use href="#i-refresh"/></svg><span data-i18n="common.refresh">Refresh</span></button>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="installPanel">
+        <div class="panel-head">
+          <span data-i18n="instances.install">Install version</span>
+          <button class="mini-btn" data-action="toggle-install"><svg><use href="#i-x"/></svg></button>
+        </div>
+        <div class="install-grid">
+          <div class="field" style="margin:0">
+            <label data-i18n="instances.gameVersion">Game version</label>
+            <button class="input" id="versionPickBtn" data-action="pick-install-version" style="text-align:left;display:flex;justify-content:space-between;align-items:center;gap:8px">
+              <span id="versionPickLabel" data-i18n="common.none">None</span><svg style="width:13px;height:13px;color:var(--muted)"><use href="#i-chevron"/></svg>
+            </button>
+          </div>
+          <div class="field" style="margin:0">
+            <label data-i18n="instances.loader">Loader</label>
+            <select class="input" id="loaderSelect"></select>
+          </div>
+          <button class="btn primary" id="installBtn" data-action="install"><svg><use href="#i-download"/></svg><span data-i18n="instances.installBtn">Start install</span></button>
+        </div>
+        <div class="progress-bar hidden" id="progressBarWrap"><i id="progressBar"></i></div>
+        <div class="progress-text hidden" id="progressTextWrap"><span id="progressText">—</span><span id="progressPercent"></span></div>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-box">
+          <svg><use href="#i-search"/></svg>
+          <input id="instanceSearch" data-i18n-ph="instances.searchPlaceholder" placeholder="Search instances…">
+        </label>
+        <div class="filters" id="instanceFilters"></div>
+        <select class="input" id="instanceSort" style="max-width:170px"></select>
+      </div>
+      <div class="grid" id="instancesGrid"></div>
+    </section>
+
+    <!-- ACCOUNTS -->
+    <section class="page" id="page-accounts">
+      <div class="page-head"><div><h1 data-i18n="accounts.title">Accounts</h1></div></div>
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-user"/></svg><span data-i18n="accounts.current">Current account</span></div>
+        <div class="skin-panel">
+          <div class="skin-face"><img id="skinFace" src="/static/images/avatar.png" alt=""></div>
+          <div class="skin-body"><img id="skinBody" src="/static/images/avatar.png" alt="" style="display:none"></div>
+          <div class="skin-info">
+            <div class="skin-name" id="skinName">Steve</div>
+            <div class="skin-type" id="skinType" data-i18n="accounts.offline">Offline</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-list"/></svg><span data-i18n="accounts.list">All accounts</span></div>
+        <div id="accountList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-plus"/></svg><span data-i18n="accounts.addOffline">Add offline account</span></div>
+        <div class="inline-form">
+          <input class="input" id="offlineName" maxlength="16" data-i18n-ph="accounts.namePlaceholder" placeholder="3-16 letters, numbers or underscore">
+          <button class="btn primary" data-action="add-offline"><span data-i18n="accounts.add">Add</span></button>
+        </div>
+        <div class="mt16 row" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <button class="btn" data-action="ms-login"><svg><use href="#i-external"/></svg><span data-i18n="accounts.microsoft">Sign in with Microsoft</span></button>
+          <span class="muted" id="msClientIdHint"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- JAVA -->
+    <section class="page" id="page-java">
+      <div class="page-head">
+        <div>
+          <h1 data-i18n="java.title">Java</h1>
+          <p data-i18n="java.subtitle">Manage and install the game runtime</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn" data-action="refresh-java"><svg><use href="#i-refresh"/></svg><span data-i18n="common.refresh">Refresh</span></button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-java"/></svg><span data-i18n="java.installed">Detected Java</span></div>
+        <div id="javaList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-download"/></svg><span data-i18n="java.install">Install Java</span></div>
+        <div class="inline-form">
+          <select class="input" id="javaVersionSelect">
+            <option value="8">Java 8</option>
+            <option value="11">Java 11</option>
+            <option value="16">Java 16</option>
+            <option value="17" selected>Java 17</option>
+            <option value="21">Java 21</option>
+          </select>
+          <button class="btn primary" data-action="install-java"><svg><use href="#i-download"/></svg><span data-i18n="java.install">Install Java</span></button>
+        </div>
+        <div class="setting-hint mt8" data-i18n="java.installHint">Downloads Temurin JDK from Adoptium</div>
+        <div class="progress-bar hidden" id="javaProgressBarWrap"><i id="javaProgressBar"></i></div>
+        <div class="progress-text hidden" id="javaProgressTextWrap"><span id="javaProgressText">—</span><span id="javaProgressPercent"></span></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page" id="page-settings">
+      <div class="page-head"><div><h1 data-i18n="settings.title">Settings</h1></div></div>
+
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-image"/></svg><span data-i18n="settings.appearance">Appearance</span></div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.theme">Theme</div></div>
+          <div class="setting-control"><select class="input" id="themeSelect"></select></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.language">Language</div></div>
+          <div class="setting-control"><select class="input" id="languageSelect"></select></div>
+        </div>
+        <div class="setting-row stack">
+          <div><div class="setting-name" data-i18n="settings.background">Background</div></div>
+          <div class="setting-control"><div class="bg-list" id="bgList"></div></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.customBackground">Custom background</div></div>
+          <div class="setting-control">
+            <input type="file" id="bgFile" accept="image/*" class="hidden">
+            <button class="btn" data-action="upload-bg"><svg><use href="#i-upload"/></svg><span data-i18n="settings.upload">Upload</span></button>
+            <button class="btn ghost" data-action="reset-bg"><span data-i18n="settings.resetBg">Reset</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-play"/></svg><span data-i18n="settings.game">Game</span></div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.source">Download source</div></div>
+          <div class="setting-control"><select class="input" id="sourceSelect"></select></div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-name" data-i18n="settings.isolation">Version isolation</div>
+            <div class="setting-hint" data-i18n="settings.isolationHint">Keep saves and mods separate for every instance</div>
+          </div>
+          <div class="setting-control"><div class="switch" id="isoSwitch" data-action="toggle-iso"></div></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.maxMemory">Default max memory (MB)</div></div>
+          <div class="setting-control"><input class="input" type="number" id="memInput" min="512" step="512" value="4096"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.minMemory">Min memory (MB)</div></div>
+          <div class="setting-control"><input class="input" type="number" id="minMemInput" min="256" step="256" value="512"></div>
+        </div>
+        <div class="setting-row stack">
+          <div>
+            <div class="setting-name" data-i18n="settings.jvmArgs">Extra JVM arguments</div>
+            <div class="setting-hint" data-i18n="settings.jvmArgsHint">For example -XX:+UseG1GC</div>
+          </div>
+          <div class="setting-control"><input class="input" id="jvmArgsInput" placeholder="-XX:+UseG1GC"></div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-name" data-i18n="settings.javaPath">Java path</div>
+            <div class="setting-hint" data-i18n="settings.javaPathHint">Leave empty to auto-detect</div>
+          </div>
+          <div class="setting-control"><input class="input" id="javaInput" placeholder="C:\\...\\java.exe"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.autoLog">Open log after launch</div></div>
+          <div class="setting-control"><div class="switch" id="autoLogSwitch" data-action="toggle-autolog"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-user"/></svg><span data-i18n="settings.microsoft">Microsoft login</span></div>
+        <div class="setting-row stack">
+          <div><div class="setting-name" data-i18n="settings.clientId">Client ID</div></div>
+          <div class="setting-control"><input class="input" id="msClientInput" placeholder="Application (client) ID"></div>
+        </div>
+        <div class="setting-hint" id="redirectHint"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><svg><use href="#i-info"/></svg><span data-i18n="settings.about">About</span></div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.version">Version</div></div>
+          <div class="setting-control"><span class="muted" id="aboutVersion">—</span></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.dataDir">Data directory</div></div>
+          <div class="setting-control"><span class="muted" id="aboutDataDir" style="word-break:break-all;text-align:left;max-width:420px">—</span></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.openFolder">Open folder</div></div>
+          <div class="setting-control">
+            <button class="btn" data-action="open-data"><svg><use href="#i-folder"/></svg><span data-i18n="settings.openFolder">Open folder</span></button>
+            <button class="btn ghost" data-action="open-log"><svg><use href="#i-list"/></svg><span data-i18n="settings.viewLog">View log</span></button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-name" data-i18n="settings.quit">Quit launcher</div></div>
+          <div class="setting-control"><button class="btn danger" data-action="quit"><svg><use href="#i-power"/></svg><span data-i18n="settings.quit">Quit</span></button></div>
+        </div>
+      </div>
+
+      <div class="page-actions" style="justify-content:flex-end;margin-top:18px">
+        <button class="btn primary" data-action="save-settings"><svg><use href="#i-check"/></svg><span data-i18n="common.save">Save</span></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <span id="modalTitle"></span>
+      <button class="modal-close" data-action="close-modal"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="ctx-menu" id="ctxMenu"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="/static/js/i18n.js"></script>
+<script src="/static/js/i18n-extra.js"></script>
+<script src="/static/js/i18n-extra2.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
