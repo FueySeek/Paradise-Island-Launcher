@@ -1,22 +1,20 @@
-import os, sys, json, uuid, hashlib, zipfile, platform, shutil, threading, subprocess, re, secrets, urllib.parse, time, shlex, webbrowser, socket
+import os, sys, json, uuid, hashlib, zipfile, platform, shutil, threading, subprocess, re, secrets, urllib.parse, time, shlex, socket
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from flask import Flask, request, jsonify, send_from_directory, redirect, send_file, session as flask_session
 
 APP_NAME = "Paradise Island Launcher"
-APP_VERSION = "2.3"
+APP_VERSION = "3.0"
 try:
     PORT = int(os.environ.get("PIL_PORT", "10131"))
 except ValueError:
     PORT = 10131
 
-# 单文件 exe 使用 --windowed 时没有控制台，sys.stdout/stderr 为 None
 if sys.stdout is None:
     sys.stdout = open(os.devnull, "w", encoding="utf-8")
 if sys.stderr is None:
     sys.stderr = sys.stdout
 
-# 单文件 exe 运行时：静态资源来自解包目录，用户数据（minecraft 目录）放在 exe 旁边
 FROZEN = bool(getattr(sys, "frozen", False))
 if FROZEN:
     BUNDLE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(sys.executable)))
@@ -26,7 +24,8 @@ else:
     BASE_DIR = BUNDLE_DIR
 STATIC_DIR = os.path.join(BUNDLE_DIR, "static")
 IMAGES_DIR = os.path.join(STATIC_DIR, "images")
-MC_DIR = os.path.join(BASE_DIR, "minecraft")
+MC_DIR = os.path.join(BASE_DIR, ".minecraft")
+OLD_MC_DIR = os.path.join(BASE_DIR, "minecraft")
 VERSIONS_DIR = os.path.join(MC_DIR, "versions")
 LIBS_DIR = os.path.join(MC_DIR, "libraries")
 ASSETS_DIR = os.path.join(MC_DIR, "assets")
@@ -37,6 +36,12 @@ DEFAULT_ICON = os.path.join(IMAGES_DIR, "icon.png")
 DEFAULT_AVATAR = os.path.join(IMAGES_DIR, "avatar.png")
 ROOT_INDEX = os.path.join(BASE_DIR, "index.html")
 STATIC_INDEX = os.path.join(STATIC_DIR, "index.html")
+
+if not os.path.isdir(MC_DIR) and os.path.isdir(OLD_MC_DIR):
+    try:
+        os.rename(OLD_MC_DIR, MC_DIR)
+    except OSError:
+        shutil.move(OLD_MC_DIR, MC_DIR)
 
 for _d in (MC_DIR, VERSIONS_DIR, LIBS_DIR, ASSETS_DIR, JAVA_DIR, BG_DIR, STATIC_DIR, IMAGES_DIR):
     os.makedirs(_d, exist_ok=True)
@@ -213,7 +218,7 @@ def download(url, path, sha1=None, size=None, source=None, sha256=None):
         actual_url = actual_url.replace("https://resources.download.minecraft.net", RESOURCES_BMCLAPI)
     candidates = [actual_url]
     if source == "bmclapi" and actual_url != url:
-        candidates.append(url)  # 镜像失败时回退官方源
+        candidates.append(url)
     last_err = None
     for candidate in candidates:
         for attempt in range(3):
@@ -231,7 +236,7 @@ def download(url, path, sha1=None, size=None, source=None, sha256=None):
                     except OSError:
                         pass
                 if "文件校验失败" in str(e):
-                    break  # 内容不对，重试同一个地址没有意义
+                    break
                 time.sleep(0.5 * (attempt + 1))
     raise last_err or RuntimeError("下载失败: " + os.path.basename(path))
 
@@ -291,7 +296,7 @@ def fetch_version_json(vid, source=None):
 
 
 def extract_natives_dir(ndir):
-    """把目录里的 natives 压缩包解压到同一个目录（忽略 META-INF）。"""
+
     if not os.path.isdir(ndir):
         return
     for fn in os.listdir(ndir):
@@ -322,7 +327,7 @@ def extract_natives(vid):
 
 
 def valid_version_id(vid):
-    """版本目录名白名单校验，避免路径穿越（如 .. / 绝对路径）。"""
+
     if not isinstance(vid, str):
         return False
     if vid != vid.strip() or not vid or len(vid) > 100:
@@ -335,7 +340,7 @@ def valid_version_id(vid):
 
 
 def load_version_chain(vid):
-    """沿 inheritsFrom 从子版本到父版本加载 JSON（用于 Forge/Fabric 等加载器版本）。"""
+
     chain, seen, cur = [], set(), vid
     while cur and cur not in seen and valid_version_id(cur):
         seen.add(cur)
@@ -361,7 +366,7 @@ def _lib_key(lib):
 
 
 def merge_version_chain(chain):
-    """把继承链合并成一份可启动的版本描述，子版本优先。"""
+
     if not chain:
         return {}
     merged = json.loads(json.dumps(chain[0]))
@@ -397,7 +402,7 @@ def merge_version_chain(chain):
 
 
 def prepare_natives(chain):
-    """保证 natives 已解压，返回 -Djava.library.path 应指向的目录。"""
+
     dirs = []
     for vj in chain:
         vid = vj.get("id")
@@ -448,7 +453,7 @@ _java_info_cache = {}
 
 
 def java_version_string(exe):
-    """调用 java -version 读取真实版本号（结果缓存）。"""
+
     if not exe:
         return ""
     if exe in _java_info_cache:
@@ -623,7 +628,7 @@ def do_install_vanilla(vid):
             _, obj = item
             h = obj["hash"]
             target = os.path.join(ASSETS_DIR, "objects", h[:2], h)
-            # url 用官方地址，source=bmclapi 时下载函数会先走镜像、失败再回退官方
+
             try:
                 download(RESOURCES_OFFICIAL + "/" + h[:2] + "/" + h, target, h, obj.get("size"),
                          src if src == "bmclapi" else None)
@@ -639,7 +644,7 @@ def do_install_vanilla(vid):
             with ThreadPoolExecutor(max_workers=16) as ex:
                 list(ex.map(task, items))
 
-        # 并发下载失败的资源再串行重试一轮，通常可以恢复镜像抖动导致的失败
+
         if asset_failures:
             print(f"[assets] 并发下载失败 {len(asset_failures)} 个，开始串行重试...")
             for h, size in list(asset_failures.items()):
@@ -661,7 +666,7 @@ def do_install_vanilla(vid):
 
 
 def get_json_first(urls, timeout=30):
-    """依次尝试多个地址，返回第一个可用的 JSON。"""
+
     last_err = None
     for url in urls:
         try:
@@ -674,7 +679,7 @@ def get_json_first(urls, timeout=30):
 
 
 def ensure_launcher_profiles():
-    """Forge/NeoForge 安装器要求目标目录里存在 launcher_profiles.json。"""
+
     p = os.path.join(MC_DIR, "launcher_profiles.json")
     if not os.path.isfile(p):
         with open(p, "w", encoding="utf-8") as f:
@@ -742,12 +747,12 @@ def install_neoforge(vid, neo_version=None):
         r = SESSION.get(f"{base}/net/neoforged/neoforge/maven-metadata.xml", timeout=30)
         r.raise_for_status()
         cands = re.findall(r"<version>(.*?)</version>", r.text)
-        # NeoForge 1.20.1 使用 47.1.x 版本号，其余版本号前缀与 MC 版本对应
+
         prefix = "47.1." if vid == "1.20.1" else re.sub(r"^1\.", "", vid) + "."
         cands = [v for v in cands if v.startswith(prefix) and "-" not in v and "+" not in v]
         if not cands:
             raise RuntimeError("找不到该版本的 NeoForge")
-        # 元数据里的顺序并不保证是最新在前，按版本号数值排序后取最新
+
         cands.sort(key=lambda v: [int(x) if x.isdigit() else -1 for x in v.split(".")])
         neo_version = cands[-1]
     installer = f"neoforge-{neo_version}-installer.jar"
@@ -762,7 +767,7 @@ def install_neoforge(vid, neo_version=None):
 
 
 def pick_loader_version(data):
-    """优先选择稳定版加载器（跳过 -beta 等预发布版本）。"""
+
     for item in data:
         ver = (item.get("loader") or {}).get("version") or ""
         if ver and "-" not in ver:
@@ -846,7 +851,7 @@ def substitute(text, ctx):
 
 
 def split_user_args(text):
-    """拆分用户填写的 JVM 参数，支持引号包裹、保留反斜杠路径。"""
+
     if not text:
         return []
     parts = re.findall(r'"([^"]*)"|\'([^\']*)\'|(\S+)', text)
@@ -890,7 +895,7 @@ def build_command(vid, memory=None, java_path=None, offline_username=None):
         art = lib.get("downloads", {}).get("artifact")
         if art:
             classpath_parts.append(os.path.join(LIBS_DIR, art["path"]))
-    # 客户端 jar 可能属于父版本（Forge/Fabric 等加载器版本自身没有 jar）
+
     client_jar = None
     for cvj in chain:
         cid = cvj.get("id") or ""
@@ -969,7 +974,7 @@ def build_command(vid, memory=None, java_path=None, offline_username=None):
                 for v in vals:
                     cmd.append(substitute(v, ctx))
     else:
-        # 先按空格拆分模板再替换变量，避免含空格的路径被拆成多个参数
+
         for token in str(vj.get("minecraftArguments") or "").split():
             cmd.append(substitute(token, ctx))
 
@@ -1508,7 +1513,7 @@ def api_instance_open_folder():
 
 @app.route("/api/open_path", methods=["POST"])
 def api_open_path():
-    """打开启动器相关目录（白名单）。"""
+
     data = request.get_json(force=True) or {}
     kind = data.get("kind") or "minecraft"
     mapping = {
@@ -1652,7 +1657,7 @@ def api_launch():
     try:
         log_file = open(log_path, "w", encoding="utf-8", errors="replace")
         flags = subprocess.CREATE_NO_WINDOW if OS_NAME == "windows" else 0
-        # 工作目录必须是游戏目录，否则存档/日志会写到启动器根目录，版本隔离失效
+
         proc = subprocess.Popen(cmd, cwd=gdir, stdout=log_file, stderr=subprocess.STDOUT, creationflags=flags)
     except FileNotFoundError:
         return jsonify({"ok": False, "error": "找不到 Java，请检查 Java 路径或前往 Java 页面安装"})
@@ -1698,7 +1703,7 @@ def api_log():
 
 @app.route("/api/instance/log")
 def api_instance_log():
-    """读取实例最近一次的游戏日志；没有 latest.log 时回退到启动器日志。"""
+
     vid = request.args.get("version", "")
     if not valid_version_id(vid):
         return jsonify({"ok": False, "error": "无效的版本名"})
@@ -1725,103 +1730,10 @@ def api_instance_log():
 
 @app.route("/api/quit", methods=["POST"])
 def api_quit():
-    """关闭启动器（单文件 exe 没有控制台，需要有个退出入口）。"""
+
     def _shutdown():
         time.sleep(0.4)
         os._exit(0)
 
     threading.Thread(target=_shutdown, daemon=True).start()
     return jsonify({"ok": True})
-
-
-def browser_url():
-    return f"http://127.0.0.1:{PORT}/"
-
-
-def already_running():
-    try:
-        r = SESSION.get(browser_url() + "api/info", timeout=2)
-        return r.status_code == 200 and r.json().get("name") == APP_NAME
-    except Exception:
-        return False
-
-
-def port_available(port):
-    """用独占方式探测端口（Windows 上能发现被残留句柄占用的端口）。"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        if hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
-        s.bind(("127.0.0.1", port))
-        return True
-    except OSError:
-        return False
-    finally:
-        s.close()
-
-
-def choose_port():
-    """默认端口不可用时自动改用后续端口，避免残留监听导致启动失败。"""
-    global PORT
-    for candidate in range(PORT, PORT + 30):
-        if port_available(candidate):
-            if candidate != PORT:
-                print(f"端口 {PORT} 被占用，改用 {candidate}")
-            PORT = candidate
-            return PORT
-    return PORT
-
-
-def close_splash():
-    try:
-        import pyi_splash
-        pyi_splash.close()
-    except Exception:
-        pass
-
-
-def open_when_ready(url, timeout=90):
-    """等待服务真正开始监听后再打开浏览器（onefile 首次启动需要解压）。"""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        try:
-            with socket.create_connection(("127.0.0.1", PORT), timeout=0.6):
-                close_splash()
-                webbrowser.open(url)
-                return
-        except OSError:
-            time.sleep(0.3)
-
-
-def main():
-    no_browser = "--no-browser" in sys.argv
-    if already_running():
-        print("启动器已在运行，直接打开页面")
-        if not no_browser:
-            webbrowser.open(browser_url())
-        return
-    choose_port()
-    print("=" * 60)
-    print(f"{APP_NAME} v{APP_VERSION}")
-    print(f"BASE_DIR : {BASE_DIR}")
-    print(f"BUNDLE   : {BUNDLE_DIR}")
-    print(f"STAT_IDX : {'OK' if os.path.isfile(STATIC_INDEX) else 'MISS'}  {STATIC_INDEX}")
-    for rel in ("icon.png", "avatar.png", "background_0.png"):
-        p = os.path.join(IMAGES_DIR, rel)
-        print(f"  [{'OK' if os.path.isfile(p) else 'MISS'}] static/images/{rel}")
-    print("=" * 60)
-    print(browser_url())
-    if no_browser:
-        close_splash()
-    else:
-        threading.Thread(target=open_when_ready, args=(browser_url(),), daemon=True).start()
-    try:
-        app.run(host="127.0.0.1", port=PORT, debug=False, threaded=True)
-    except OSError as e:
-        print("启动失败:", e)
-        if not no_browser:
-            webbrowser.open(browser_url())
-
-
-if __name__ == "__main__":
-    main()
